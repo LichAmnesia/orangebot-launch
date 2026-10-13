@@ -1,0 +1,44 @@
+.search {
+  width: 100%;
+  margin: var(--ob-s-3) 0;
+}
+
+.history {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.h-item {
+  padding: var(--ob-s-3) 0;
+  border-bottom: 1px solid var(--ob-rule);
+}
+
+.h-meta {
+  display: flex;
+  gap: var(--ob-s-2);
+  align-items: center;
+  font-size: 12px;
+}
+
+.badge-mode {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: var(--ob-r-pill);
+  border: 1px solid var(--ob-rule);
+}
+
+.delivery.copied_only,
+.delivery.failed {
+  color: var(--ob-warn);
+}
+
+.h-final {
+  margin: 6px 0;
+  line-height: 1.5;
+}
+
+.h-raw {
+  color: var(--ob-fg-dim);
+  white-space: pre-wrap;
+}

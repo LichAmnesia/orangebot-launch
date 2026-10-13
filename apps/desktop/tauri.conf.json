@@ -1,0 +1,103 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "orangebot",
+  "version": "0.1.0",
+  "identifier": "ai.orangebot.desktop",
+  "build": {
+    "frontendDist": "../ui/dist",
+    "devUrl": "http://127.0.0.1:1420",
+    "beforeDevCommand": {
+      "script": "trunk serve",
+      "cwd": "../ui"
+    },
+    "beforeBuildCommand": {
+      "script": "trunk build --release",
+      "cwd": "../ui"
+    }
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "orangebot",
+        "width": 1080,
+        "height": 740,
+        "minWidth": 860,
+        "minHeight": 600,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
+      },
+      {
+        "label": "voicebar",
+        "url": "index.html#voicebar",
+        "width": 340,
+        "height": 64,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "visible": false,
+        "focus": false,
+        "skipTaskbar": true,
+        "resizable": false,
+        "shadow": false,
+        "visibleOnAllWorkspaces": true
+      },
+      {
+        "label": "answer",
+        "url": "index.html#answer",
+        "title": "orangebot \u00b7 answer",
+        "width": 480,
+        "height": 360,
+        "minWidth": 360,
+        "minHeight": 240,
+        "alwaysOnTop": true,
+        "visible": false,
+        "resizable": true,
+        "decorations": true,
+        "skipTaskbar": true
+      },
+      {
+        "label": "result",
+        "url": "index.html#result",
+        "title": "orangebot \u00b7 result",
+        "width": 440,
+        "height": 260,
+        "alwaysOnTop": true,
+        "visible": false,
+        "resizable": true,
+        "skipTaskbar": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src ipc: http://ipc.localhost"
+    },
+    "macOSPrivateApi": true
+  },
+  "bundle": {
+    "active": true,
+    "createUpdaterArtifacts": true,
+    "targets": [
+      "app"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "externalBin": [
+      "binaries/llama-server",
+      "binaries/ob-asr-server"
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg3QkQxQkQ3NzhFOTcxMDUKUldRRmNlbDQxeHU5aHl0bC8yb1Fydzk0eVdNSmVteTJWREh0dTJYNzlSWnpDR2VGRmU2bHA4UDUK",
+      "endpoints": [
+        "https://github.com/LichAmnesia/orangebot-type/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}

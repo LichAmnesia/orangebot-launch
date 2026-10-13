@@ -1,0 +1,11 @@
+.meet-ctl{display:flex;align-items:center;gap:var(--ob-s-3);margin:var(--ob-s-4) 0}
+.rec-dot{width:10px;height:10px;border-radius:50%;background:var(--ob-accent);animation:vpulse 1.2s ease-in-out infinite}
+.meter{width:120px;height:6px;border-radius:3px;background:var(--ob-bg-sunk);overflow:hidden}
+.meter>div{height:100%;background:var(--ob-accent)}
+.live{max-height:320px;overflow-y:auto;line-height:1.6}
+.live p{margin:0 0 6px}
+.ts{color:var(--ob-fg-mute);margin-right:8px}
+.meet-list{list-style:none;padding:0;margin:var(--ob-s-2) 0}
+.meet-row{padding:10px 0;border-bottom:1px solid var(--ob-rule);cursor:pointer}
+.meet-row:hover{background:var(--ob-bg-raised)}
+@keyframes vpulse{0%,100%{opacity:1}50%{opacity:.35}}

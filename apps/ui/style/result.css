@@ -1,0 +1,3 @@
+.result{padding:var(--ob-s-4);display:flex;flex-direction:column;gap:var(--ob-s-2);height:100vh;box-sizing:border-box}
+.result textarea{flex:1;border:1px solid var(--ob-rule);border-radius:var(--ob-r-control);background:var(--ob-bg);color:var(--ob-fg);padding:8px;font:inherit}
+.result .row{display:flex;gap:var(--ob-s-2);flex-wrap:wrap}

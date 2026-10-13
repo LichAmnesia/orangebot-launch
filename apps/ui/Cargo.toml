@@ -1,0 +1,18 @@
+[package]
+name = "ob-ui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+leptos = { workspace = true }
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+serde = { workspace = true }
+serde-wasm-bindgen = { workspace = true }
+js-sys = { workspace = true }
+ob-ipc = { workspace = true }
+pulldown-cmark = { workspace = true }
+
+[lints]
+workspace = true

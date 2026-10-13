@@ -1,0 +1,17 @@
+[package]
+name = "ob-platform-macos"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ob-domain = { workspace = true }
+ob-platform = { workspace = true }
+arboard = { workspace = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+core-foundation = { workspace = true }
+core-graphics = { workspace = true }
+objc2 = { workspace = true }
+objc2-app-kit = { workspace = true, features = ["libc"] }
+objc2-foundation = { workspace = true }

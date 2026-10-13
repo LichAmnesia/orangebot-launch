@@ -1,0 +1,5 @@
+.prompt{width:100%;box-sizing:border-box;border:1px solid var(--ob-rule);border-radius:var(--ob-r-control);background:var(--ob-bg);color:var(--ob-fg);padding:10px;font-size:12px;line-height:1.5;resize:vertical}
+.mode-bar{display:flex;align-items:center;gap:var(--ob-s-2);margin:var(--ob-s-4) 0 var(--ob-s-2)}
+.test{margin-top:var(--ob-s-4);display:flex;flex-direction:column;gap:var(--ob-s-2)}
+.test textarea{width:100%;box-sizing:border-box;border:1px solid var(--ob-rule);border-radius:var(--ob-r-control);background:var(--ob-bg);color:var(--ob-fg);padding:8px;font:inherit}
+.result{background:var(--ob-bg-sunk);border-radius:var(--ob-r-control);padding:10px;white-space:pre-wrap}

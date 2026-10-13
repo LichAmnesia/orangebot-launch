@@ -1,0 +1,81 @@
+.recipes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ob-s-3);
+  margin: var(--ob-s-5) 0;
+}
+
+.recipe {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recipe p {
+  margin: 0;
+}
+
+.recipe-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--ob-r-pill);
+  background: var(--ob-accent-tint);
+  color: var(--ob-fg);
+}
+
+.bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ob-bg-sunk);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--ob-accent);
+  transition: width var(--ob-motion);
+}
+
+.dl-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: var(--ob-s-2) 0;
+}
+
+.dl-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ob-s-2);
+}
+
+.error {
+  color: var(--ob-error);
+  margin: 0;
+}
+
+table.models {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--ob-s-2);
+  font-size: 13px;
+}
+
+table.models th {
+  text-align: left;
+  color: var(--ob-fg-mute);
+  font-weight: 500;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--ob-rule);
+}
+
+table.models td {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--ob-rule);
+}

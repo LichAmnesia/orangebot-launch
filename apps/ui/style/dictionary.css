@@ -1,0 +1,7 @@
+.dict-add{display:grid;grid-template-columns:1fr 1.4fr auto;gap:var(--ob-s-2);margin:var(--ob-s-4) 0}
+.dict-list{list-style:none;padding:0;margin:0}
+.dict-list li{display:grid;grid-template-columns:1fr 1.4fr auto auto auto;gap:var(--ob-s-3);align-items:center;padding:10px 0;border-bottom:1px solid var(--ob-rule)}
+.dict-phrase{font-weight:600}
+.badge-src{font-size:11px;padding:1px 8px;border-radius:var(--ob-r-pill);border:1px solid var(--ob-rule);color:var(--ob-fg-dim)}
+.dict-list button.link{background:none;border:0;color:var(--ob-accent);font:inherit;font-size:13px;cursor:pointer;padding:0}
+.dict-add p.error,.dict-list+.error,p.error{color:var(--ob-warn);font-size:12px;margin:0}

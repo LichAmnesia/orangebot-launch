@@ -1,0 +1,54 @@
+:root {
+  color-scheme: light dark;
+  --ob-bg: #faf5eb;
+  --ob-bg-raised: #fffdf7;
+  --ob-bg-sunk: #f4f0e5;
+  --ob-fg: #27211b;
+  --ob-fg-dim: #5c5347;
+  --ob-fg-mute: #6b6052;
+  --ob-rule: #d9cfbe;
+  --ob-accent: #c2410c;
+  --ob-accent-deep: #9a3412;
+  --ob-accent-tint: #f5dcc8;
+  --ob-good: #1e7a44;
+  --ob-warn: #875d00;
+  --ob-error: #b3261e;
+  --ob-font-ui: "Space Grotesk", "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+  --ob-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ob-r-control: 8px;
+  --ob-r-container: 12px;
+  --ob-r-pill: 32px;
+  --ob-s-1: 4px;
+  --ob-s-2: 8px;
+  --ob-s-3: 12px;
+  --ob-s-4: 16px;
+  --ob-s-5: 24px;
+  --ob-s-6: 32px;
+  --ob-s-7: 48px;
+  --ob-shadow-overlay: 0 12px 32px rgba(39, 33, 27, 0.18), 0 2px 6px rgba(39, 33, 27, 0.1);
+  --ob-motion: 180ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ob-bg: #0f1a24;
+    --ob-bg-raised: #16242f;
+    --ob-bg-sunk: #0a121a;
+    --ob-fg: #f2ead9;
+    --ob-fg-dim: #a89c8a;
+    --ob-fg-mute: #998e7e;
+    --ob-rule: #2a3a48;
+    --ob-accent: #f08c5a;
+    --ob-accent-deep: #c2410c;
+    --ob-accent-tint: #3a2417;
+    --ob-good: #6fcf97;
+    --ob-warn: #f0c050;
+    --ob-error: #f28b82;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ob-motion: 0ms;
+  }
+}

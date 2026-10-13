@@ -1,0 +1,43 @@
+# Design (Claude Design exports, screenshots, tokens drafts) — local only
+/design/
+
+# Agent harness / local tooling — local only
+/.claude/
+/.codex/
+/.opencode/
+/.herdr/
+/.cursor/
+/.gemini/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+opencode.json
+.mcp.json
+
+# Rust / Tauri
+/target/
+**/target/
+/dist/
+/apps/*/dist/
+/apps/*/src-tauri/target/
+*.dmg
+*.msi
+
+# Models & runtime data (never commit weights)
+/models/
+*.gguf
+*.bin
+*.onnx
+*.safetensors
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.log
+.env
+.env.*
+
+# Agent coordination logs — local only
+/progress/
+/apps/desktop/binaries/

@@ -1,0 +1,11 @@
+[package]
+name = "ob-audio"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ob-domain = { workspace = true }
+hound = { workspace = true }
+cpal = { workspace = true }
+thiserror = { workspace = true }

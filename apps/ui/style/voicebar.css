@@ -1,0 +1,14 @@
+.vbar{position:fixed;inset:6px;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:var(--ob-r-pill);background:var(--ob-bg-raised);border:1px solid var(--ob-rule);box-shadow:var(--ob-shadow-overlay);font-family:var(--ob-font-ui);color:var(--ob-fg)}
+.vdot{width:9px;height:9px;border-radius:50%;background:var(--ob-fg-mute);flex:none}
+.vbar.recording .vdot{background:var(--ob-accent);animation:vpulse 1.2s ease-in-out infinite}
+.vbar.done .vdot{background:var(--ob-good)}
+.vbar.failed .vdot,.vbar.copied .vdot{background:var(--ob-warn)}
+.wave{display:flex;align-items:center;gap:2px;height:28px;flex:none}
+.wave i{display:block;width:3px;border-radius:2px;background:var(--ob-accent);transition:height 80ms linear}
+.vbar:not(.recording) .wave i{background:var(--ob-fg-mute)}
+.vtext{display:flex;flex-direction:column;min-width:0;flex:1}
+.vlabel{font-weight:600;font-size:13px}
+.vsub{font-size:11px;color:var(--ob-fg-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--ob-font-mono)}
+.vkey{font-family:var(--ob-font-mono);font-size:10px;color:var(--ob-fg-mute);border:1px solid var(--ob-rule);border-radius:5px;padding:1px 5px}
+@keyframes vpulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion: reduce){.vbar.recording .vdot{animation:none}}

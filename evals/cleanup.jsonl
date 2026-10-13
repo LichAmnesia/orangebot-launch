@@ -1,0 +1,20 @@
+{"id": "en-correction-day", "mode": "dictate", "input": "um so i think we should uh ship the beta on friday no wait on monday and tell the team", "must": ["Monday"], "must_not": ["Friday", "um", "uh"], "must_any": []}
+{"id": "en-correction-money", "mode": "dictate", "input": "the budget is 40 thousand dollars, sorry, 45 thousand, for Q3", "must": ["45"], "must_not": ["40"], "must_any": []}
+{"id": "en-correction-name", "mode": "dictate", "input": "please forward this to john I mean to james before lunch", "must": ["James"], "must_not": ["John"], "must_any": []}
+{"id": "en-fillers", "mode": "dictate", "input": "so like um the deploy uh went fine you know and the tests are green", "must": ["deploy", "tests"], "must_not": [" um ", " uh ", "you know"], "must_any": []}
+{"id": "en-keep-numbers", "mode": "dictate", "input": "the invoice number is 4 4 7 1 9 and the total is 1,250 dollars and 30 cents due on march 3rd", "must": ["44719", "1,250", "March 3"], "must_not": [], "must_any": []}
+{"id": "en-no-answer", "mode": "dictate", "input": "what time does the standup start tomorrow", "must": ["standup", "tomorrow", "?"], "must_not": ["9", "10 am", "starts at"], "must_any": []}
+{"id": "en-no-translate", "mode": "dictate", "input": "let's grab coffee at three", "must": ["coffee"], "must_not": ["咖啡"], "must_any": []}
+{"id": "en-keep-meaning", "mode": "dictate", "input": "i don't think we should merge this pr yet", "must": ["don't", "merge"], "must_not": [], "must_any": []}
+{"id": "zh-correction-time", "mode": "dictate", "input": "嗯,那个,明天下午三点我们开个会,讨论一下roadmap,不对,是四点。", "must": ["四点"], "must_not": ["三点", "嗯", "那个"], "must_any": []}
+{"id": "zh-correction-person", "mode": "dictate", "input": "把合同发给小王,不对,是发给小李,今天之内", "must": ["小李"], "must_not": ["小王"], "must_any": []}
+{"id": "zh-fillers", "mode": "dictate", "input": "就是那个,我觉得这个方案,嗯,还可以再优化一下", "must": ["方案", "优化"], "must_not": ["嗯", "那个"], "must_any": []}
+{"id": "zh-keep-money", "mode": "dictate", "input": "这个月的预算是三万五千块,下个月再加五千", "must": [], "must_not": [], "must_any": ["35000", "35,000", "三万五千", "3.5万", "3万5"]}
+{"id": "zh-no-answer", "mode": "dictate", "input": "明天的会议几点开始", "must": ["会议"], "must_not": [], "must_any": ["？", "?"]}
+{"id": "zh-no-translate", "mode": "dictate", "input": "我们周五上线新版本", "must": ["上线"], "must_not": ["release", "Friday"], "must_any": []}
+{"id": "mixed-terms", "mode": "dictate", "input": "嗯我们用 rust 和 tauri 重写 desktop app 然后 ship 到 mac", "must": ["Rust", "Tauri"], "must_not": ["嗯"], "must_any": []}
+{"id": "mixed-correction", "mode": "dictate", "input": "PR 合并到 main 分支,不对,是 release 分支", "must": ["release"], "must_not": ["main 分支"], "must_any": []}
+{"id": "tr-en", "mode": "translate", "target": "English", "input": "明天下午四点开会,讨论预算", "must": ["budget"], "must_not": ["明天"], "must_any": ["4", "four"]}
+{"id": "tr-zh", "mode": "translate", "target": "Simplified Chinese", "input": "the meeting moved to 4 pm on Monday", "must": ["4"], "must_not": ["meeting"], "must_any": ["周一", "星期一", "礼拜一"]}
+{"id": "tr-keep-numbers", "mode": "translate", "target": "English", "input": "合同金额是一百二十万元,三月十五号付款", "must": ["15"], "must_not": [], "must_any": ["1.2 million", "1,200,000", "1.2M", "1200000"]}
+{"id": "ask-write", "mode": "ask", "input": "write a one line apology for being late to the meeting", "must": ["late"], "must_not": ["Sure,", "Sure!", "Here is", "Here's"], "must_any": []}
