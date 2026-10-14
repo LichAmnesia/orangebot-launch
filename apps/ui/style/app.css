@@ -22,12 +22,20 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  overflow-y: auto;
 }
 
 .brand {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   padding: 0 var(--ob-s-2) var(--ob-s-4);
+}
+
+.brand small {
+  display: block;
+  font-size: 11px;
+  color: var(--ob-fg-mute);
+  font-weight: 400;
 }
 
 .brand span {
@@ -64,10 +72,6 @@ body {
   height: 1px;
   background: var(--ob-rule);
   margin: var(--ob-s-2) var(--ob-s-2);
-}
-
-.nav-spacer {
-  flex: 1;
 }
 
 .main {

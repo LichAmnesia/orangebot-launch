@@ -91,7 +91,6 @@ pub fn App() -> impl IntoView {
                     })
                     .collect_view()}
                 <div class="nav-sep"></div>
-                <div class="nav-spacer"></div>
                 <button
                     class=move || {
                         format!(
