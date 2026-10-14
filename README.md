@@ -2,6 +2,8 @@
 
 Launch is a desktop launcher for AI tasks: press a key in any app, the task runs on a local or cloud provider, the result lands back where you were. First tools: Launch Type (voice typing) and Launch Meeting (live transcription).
 
+![Launch home window: hotkeys for Dictate, Translate, Ask and Rewrite, weekly stats and activity heatmap](docs/images/home.png)
+
 Launch by orangebot — an open-source local-model launcher. Hold a key, speak, and clean text lands in whatever box you were typing in. Runs local speech and text models with one-click install, or connects to your own OpenAI-compatible servers (base URL, model and key set separately for speech and text).
 
 - Rust core and Rust UI (Tauri 2 + Leptos); macOS first, Windows next
