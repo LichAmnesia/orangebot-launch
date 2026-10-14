@@ -2,6 +2,7 @@ html,
 body {
   margin: 0;
   height: 100%;
+  overflow: hidden;
   background: var(--ob-bg);
   color: var(--ob-fg);
   font-family: var(--ob-font-ui);
@@ -12,7 +13,9 @@ body {
 .shell {
   display: grid;
   grid-template-columns: 192px 1fr;
+  grid-template-rows: 100vh;
   height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar {
@@ -22,7 +25,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  height: 100vh;
+  box-sizing: border-box;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .brand {
@@ -78,6 +84,9 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .topbar {
@@ -89,7 +98,8 @@ body {
 }
 
 .content {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--ob-s-2) var(--ob-s-6) var(--ob-s-6);
 }
