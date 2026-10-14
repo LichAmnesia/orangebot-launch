@@ -141,7 +141,7 @@ fn is_valid_sha256(s: &str) -> bool {
 mod tests {
     use super::*;
 
-    const JSON: &str = include_str!("../../../docs/spec/model-catalog.candidate.json");
+    const JSON: &str = include_str!("../data/model-catalog.json");
 
     fn parsed() -> Catalog {
         Catalog::from_json_str(JSON).expect("candidate catalog should parse")

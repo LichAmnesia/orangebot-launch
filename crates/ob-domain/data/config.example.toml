@@ -1,0 +1,80 @@
+# Specification example. Not consumed by a production application yet.
+schema_version = 1
+
+[privacy]
+strict_local = true
+allow_cloud_fallback = false
+cursor_context = false
+screenshot_context = false
+
+[retention]
+text_days = 30
+audio_days = 7
+
+[managed_runtime]
+llm_bind_host = "127.0.0.1"
+llm_port = 17861
+asr_api_enabled = false
+asr_api_bind_host = "127.0.0.1"
+asr_api_port = 17860
+idle_unload_minutes = 15
+
+[[profiles]]
+id = "managed-asr"
+role = "asr"
+location = "managed"
+protocol = "worker_ipc"
+model = "whisper-turbo-q5"
+
+[[profiles]]
+id = "managed-text"
+role = "text"
+location = "managed"
+protocol = "openai_chat"
+base_url = "http://127.0.0.1:17861/v1"
+model = "qwen35-2b-q4"
+credential_ref = "os-vault://voice/managed-llm"
+enable_thinking = false
+context_tokens = 8192
+max_output_tokens = 2048
+
+[[profiles]]
+id = "existing-local-text"
+role = "text"
+location = "external_local"
+protocol = "openai_chat"
+base_url = "http://127.0.0.1:11434/v1"
+model = "USER_ACTUAL_MODEL_ID"
+chat_route = "/chat/completions"
+models_route = "/models"
+credential_ref = "os-vault://voice/existing-local-text"
+
+[[profiles]]
+id = "lan-asr"
+role = "asr"
+location = "lan"
+protocol = "openai_transcription"
+base_url = "http://192.168.1.50:8000/v1"
+model = "USER_ACTUAL_ASR_MODEL_ID"
+transcription_route = "/audio/transcriptions"
+credential_ref = "os-vault://voice/lan-asr"
+connect_timeout_ms = 5000
+total_timeout_ms = 60000
+
+[routing.dictate]
+asr = "managed-asr"
+text = "managed-text"
+fallback = "none"
+
+[routing.translate]
+asr = "managed-asr"
+text = "managed-text"
+target_languages = ["en-US", "zh-CN"]
+
+[routing.ask]
+asr = "managed-asr"
+text = "managed-text"
+search_enabled = false
+
+[routing.learning]
+text = "managed-text"

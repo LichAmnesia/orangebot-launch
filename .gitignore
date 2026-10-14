@@ -41,3 +41,6 @@ opencode.json
 # Agent coordination logs — local only
 /progress/
 /apps/desktop/binaries/
+
+# Internal docs (spec, release, marketplace notes) stay local
+/docs/

@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use crate::catalog::{Catalog, ModelEntry};
 
 pub const BUILTIN_CATALOG_JSON: &str =
-    include_str!("../../../docs/spec/model-catalog.candidate.json");
+    include_str!("../data/model-catalog.json");
 
 pub fn builtin_catalog() -> Catalog {
     Catalog::from_json_str(BUILTIN_CATALOG_JSON).expect("built-in catalog is valid")

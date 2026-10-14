@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "purpose": "Specification candidates; not a production catalog",
+  "checked_at": "2026-10-12T20:51:05.694354+00:00",
+  "models": [
+    {
+      "id": "whisper-turbo-q5",
+      "role": "asr",
+      "repo": "ggerganov/whisper.cpp",
+      "publisher": "ggerganov",
+      "revision": "5359861c739e955e79d9a303bcbc70fb988958b1",
+      "license": "mit",
+      "source_card_url": "https://huggingface.co/ggerganov/whisper.cpp",
+      "assets": [
+        {
+          "relative_path": "ggml-large-v3-turbo-q5_0.bin",
+          "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-large-v3-turbo-q5_0.bin",
+          "bytes": 574041195,
+          "sha256": "394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2"
+        }
+      ],
+      "runtime_id": "whisper_cpp",
+      "runtime_revision": null,
+      "runtime_assets": [],
+      "platform_targets": [
+        "macos-aarch64",
+        "windows-x86_64"
+      ],
+      "qualification_status": "candidate",
+      "runtime_smoke_verified": false,
+      "full_asset_inventory_verified": true,
+      "catalog_release_ready": false,
+      "reason": "Pinned weight metadata only; runtime build, signature, quality and platform qualification still required."
+    },
+    {
+      "id": "qwen35-2b-q4",
+      "role": "text",
+      "repo": "unsloth/Qwen3.5-2B-GGUF",
+      "publisher": "unsloth",
+      "revision": "f6d5376be1edb4d416d56da11e5397a961aca8ae",
+      "license": "apache-2.0",
+      "source_card_url": "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF",
+      "assets": [
+        {
+          "relative_path": "Qwen3.5-2B-Q4_K_M.gguf",
+          "url": "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/f6d5376be1edb4d416d56da11e5397a961aca8ae/Qwen3.5-2B-Q4_K_M.gguf",
+          "bytes": 1280835840,
+          "sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223"
+        }
+      ],
+      "runtime_id": "llama_cpp",
+      "runtime_revision": null,
+      "runtime_assets": [],
+      "platform_targets": [
+        "macos-aarch64",
+        "windows-x86_64"
+      ],
+      "qualification_status": "candidate",
+      "runtime_smoke_verified": false,
+      "full_asset_inventory_verified": true,
+      "catalog_release_ready": false,
+      "reason": "Pinned weight metadata only; runtime build, signature, quality and platform qualification still required."
+    },
+    {
+      "id": "qwen35-4b-q4",
+      "role": "text",
+      "repo": "unsloth/Qwen3.5-4B-GGUF",
+      "publisher": "unsloth",
+      "revision": "e87f176479d0855a907a41277aca2f8ee7a09523",
+      "license": "apache-2.0",
+      "source_card_url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF",
+      "assets": [
+        {
+          "relative_path": "Qwen3.5-4B-Q4_K_M.gguf",
+          "url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf",
+          "bytes": 2740937888,
+          "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4"
+        }
+      ],
+      "runtime_id": "llama_cpp",
+      "runtime_revision": null,
+      "runtime_assets": [],
+      "platform_targets": [
+        "macos-aarch64",
+        "windows-x86_64"
+      ],
+      "qualification_status": "candidate",
+      "runtime_smoke_verified": false,
+      "full_asset_inventory_verified": true,
+      "catalog_release_ready": false,
+      "reason": "Pinned weight metadata only; runtime build, signature, quality and platform qualification still required."
+    },
+    {
+      "id": "qwen3-asr-0.6b",
+      "role": "asr",
+      "repo": "Qwen/Qwen3-ASR-0.6B",
+      "publisher": "Qwen",
+      "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "license": "apache-2.0",
+      "source_card_url": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+      "assets": [
+        {
+          "relative_path": "model.safetensors",
+          "url": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B/resolve/5eb144179a02acc5e5ba31e748d22b0cf3e303b0/model.safetensors",
+          "bytes": 1876091704,
+          "sha256": "79d6cbd4c98c7bbffe9db2edac07f56cd6637d0d5944b27f6c2b8353840323ea"
+        }
+      ],
+      "required_auxiliary_files": [
+        "chat_template.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "runtime_id": "qwen_asr_rust_candidate",
+      "runtime_revision": null,
+      "runtime_assets": [],
+      "platform_targets": [
+        "macos-aarch64"
+      ],
+      "qualification_status": "candidate",
+      "runtime_smoke_verified": false,
+      "full_asset_inventory_verified": false,
+      "catalog_release_ready": false,
+      "reason": "Need tokenizer/config bundle hashes and actual Rust runtime load verification."
+    },
+    {
+      "id": "qwen3-asr-1.7b",
+      "role": "asr",
+      "repo": "Qwen/Qwen3-ASR-1.7B",
+      "publisher": "Qwen",
+      "revision": "7278e1e70fe206f11671096ffdd38061171dd6e5",
+      "license": "apache-2.0",
+      "source_card_url": "https://huggingface.co/Qwen/Qwen3-ASR-1.7B",
+      "assets": [
+        {
+          "relative_path": "model-00001-of-00002.safetensors",
+          "url": "https://huggingface.co/Qwen/Qwen3-ASR-1.7B/resolve/7278e1e70fe206f11671096ffdd38061171dd6e5/model-00001-of-00002.safetensors",
+          "bytes": 4220320824,
+          "sha256": "a4cd1f1a04d90b757dc7f7dd26254e69a013b19e80efe590a83c6a3bde8608d6"
+        },
+        {
+          "relative_path": "model-00002-of-00002.safetensors",
+          "url": "https://huggingface.co/Qwen/Qwen3-ASR-1.7B/resolve/7278e1e70fe206f11671096ffdd38061171dd6e5/model-00002-of-00002.safetensors",
+          "bytes": 478200688,
+          "sha256": "6e0b9d9e09e2e0238e7ef3cc8a484ab387e91b90f1900bedf88bc92d7929ccfc"
+        }
+      ],
+      "required_auxiliary_files": [
+        "chat_template.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors.index.json",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "runtime_id": "qwen_asr_rust_candidate",
+      "runtime_revision": null,
+      "runtime_assets": [],
+      "platform_targets": [
+        "macos-aarch64"
+      ],
+      "qualification_status": "candidate",
+      "runtime_smoke_verified": false,
+      "full_asset_inventory_verified": false,
+      "catalog_release_ready": false,
+      "reason": "Need tokenizer/config bundle hashes and actual Rust runtime load verification."
+    }
+  ],
+  "recipes": [
+    {
+      "id": "local-light",
+      "asr": "whisper-turbo-q5",
+      "text": "qwen35-2b-q4",
+      "target_ram_gib": 8,
+      "qualification_status": "candidate",
+      "one_click_ready": false,
+      "ram_measured": false
+    },
+    {
+      "id": "local-balanced",
+      "asr": "whisper-turbo-q5",
+      "text": "qwen35-4b-q4",
+      "target_ram_gib": 16,
+      "qualification_status": "candidate",
+      "one_click_ready": false,
+      "ram_measured": false
+    },
+    {
+      "id": "local-chinese",
+      "asr": "qwen3-asr-0.6b",
+      "text": "qwen35-4b-q4",
+      "target_ram_gib": 16,
+      "qualification_status": "candidate",
+      "one_click_ready": false,
+      "ram_measured": false
+    },
+    {
+      "id": "local-chinese-quality",
+      "asr": "qwen3-asr-1.7b",
+      "text": "qwen35-4b-q4",
+      "target_ram_gib": 32,
+      "qualification_status": "candidate",
+      "one_click_ready": false,
+      "ram_measured": false
+    }
+  ]
+}

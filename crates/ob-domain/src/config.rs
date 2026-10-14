@@ -206,7 +206,7 @@ impl ProviderProfile {
 mod tests {
     use super::*;
 
-    const EXAMPLE: &str = include_str!("../../../docs/spec/config.example.toml");
+    const EXAMPLE: &str = include_str!("../data/config.example.toml");
 
     #[test]
     fn parses_example_config() {

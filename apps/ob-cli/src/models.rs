@@ -6,7 +6,7 @@ use std::time::Duration;
 
 use anyhow::{Context, bail};
 
-const CATALOG_JSON: &str = include_str!("../../../docs/spec/model-catalog.candidate.json");
+const CATALOG_JSON: &str = include_str!("../../../crates/ob-models/data/model-catalog.json");
 
 fn catalog() -> anyhow::Result<ob_models::Catalog> {
     Ok(ob_models::Catalog::from_json_str(CATALOG_JSON)?)

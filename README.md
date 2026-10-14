@@ -2,7 +2,7 @@
 
 Launch is a desktop launcher for AI tasks: press a key in any app, the task runs on a local or cloud provider, the result lands back where you were. First tools: Launch Type (voice typing) and Launch Meeting (live transcription).
 
-![Launch home window: hotkeys for Dictate, Translate, Ask and Rewrite, weekly stats and activity heatmap](docs/images/home.png)
+![Launch home window: hotkeys for Dictate, Translate, Ask and Rewrite, weekly stats and activity heatmap](assets/home.png)
 
 Launch by orangebot — an open-source local-model launcher. Hold a key, speak, and clean text lands in whatever box you were typing in. Runs local speech and text models with one-click install, or connects to your own OpenAI-compatible servers (base URL, model and key set separately for speech and text).
 
@@ -11,7 +11,7 @@ Launch by orangebot — an open-source local-model launcher. Hold a key, speak, 
 - Tools are plugins on the platform (`ob-tools`): **Launch Type** first; read (TTS), scan (OCR) and file Q&A later
 - No account, no quota; strict-local mode keeps audio and text on your Mac
 
-Status: pre-alpha. Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · product spec: [docs/spec/SPEC.md](docs/spec/SPEC.md).
+Status: pre-alpha.
 
 ## Layout
 
