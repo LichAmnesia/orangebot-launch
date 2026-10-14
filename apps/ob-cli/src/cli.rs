@@ -7,7 +7,7 @@ use std::path::PathBuf;
 #[command(
     name = "ob",
     version,
-    about = "orangebot — open local-model launcher and tools"
+    about = "Orangebot Launch — local-model launcher and AI task tools"
 )]
 pub struct Cli {
     #[command(subcommand)]
@@ -75,6 +75,27 @@ pub enum Command {
         file: PathBuf,
         #[arg(long)]
         min_pass: Option<usize>,
+    },
+    /// End-to-end self-checks against real apps
+    Selftest {
+        #[command(subcommand)]
+        cmd: SelftestCmd,
+    },
+}
+
+/// `ob selftest` subcommands.
+#[derive(clap::Subcommand)]
+pub enum SelftestCmd {
+    /// Insert text into real apps and verify it landed
+    Insert {
+        #[arg(
+            long,
+            value_delimiter = ',',
+            default_value = "textedit,notes,safari,chrome"
+        )]
+        apps: Vec<String>,
+        #[arg(long, default_value_t = 5)]
+        runs: u32,
     },
 }
 

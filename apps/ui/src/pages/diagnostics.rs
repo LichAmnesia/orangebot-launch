@@ -24,7 +24,7 @@ fn copy_to_clipboard(text: &str) -> bool {
 }
 
 fn report_text(r: &DiagReport) -> String {
-    let mut out = format!("orangebot type {}\n", r.version);
+    let mut out = format!("Launch Type {}\n", r.version);
     for c in &r.checks {
         let mark = if c.ok { "OK" } else { "FAIL" };
         out.push_str(&format!("[{mark}] {} — {}\n", c.name, c.detail));

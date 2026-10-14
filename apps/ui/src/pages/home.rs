@@ -6,7 +6,9 @@ use crate::i18n::pick;
 use crate::ipc::{NoArgs, call};
 use crate::keys::Keys;
 use crate::stats::StatsCard;
-use ob_ipc::{AppStatus, HistoryItem, HotkeySettings, PermissionStatus, ReadyState, cmd};
+use ob_ipc::{
+    AppStatus, HistoryItem, HotkeySettings, HotkeyStatus, PermissionStatus, ReadyState, cmd,
+};
 
 #[derive(serde::Serialize)]
 struct HistoryArgs {
@@ -63,6 +65,10 @@ pub fn HomePage() -> impl IntoView {
     let hotkeys = AsyncDerived::new_unsync(|| async {
         call::<_, HotkeySettings>(cmd::GET_HOTKEYS, &NoArgs {}).await
     });
+    let hotkey_status = AsyncDerived::new_unsync(move || {
+        version.track();
+        async move { call::<_, Vec<HotkeyStatus>>(cmd::HOTKEY_STATUS, &NoArgs {}).await }
+    });
     let perms = AsyncDerived::new_unsync(|| async {
         call::<_, PermissionStatus>(cmd::PERMISSION_STATUS, &NoArgs {}).await
     });
@@ -81,7 +87,7 @@ pub fn HomePage() -> impl IntoView {
                 let nav_servers = nav;
                 return view! {
                     <div class="card onboard">
-                        <h2>{move || pick("Set up orangebot type", "设置 orangebot type")}</h2>
+                        <h2>{move || pick("Set up Launch Type", "设置 Launch Type")}</h2>
                         <ol>
                             <li>
                                 <strong>{move || pick("Choose where models run", "选择模型在哪里运行")}</strong>
@@ -108,7 +114,15 @@ pub fn HomePage() -> impl IntoView {
                                         _ => view! {
                                             <button
                                                 class="btn"
-                                                on:click=|_| open_privacy("accessibility")
+                                                on:click=|_| {
+                                                    spawn_local(async move {
+                                                        let _ = call::<_, bool>(
+                                                            cmd::REQUEST_ACCESSIBILITY,
+                                                            &NoArgs {},
+                                                        )
+                                                        .await;
+                                                    });
+                                                }
                                             >
                                                 {move || pick("Allow Accessibility", "授予辅助功能")}
                                             </button>
@@ -184,6 +198,7 @@ pub fn HomePage() -> impl IntoView {
             };
             let nav_models = nav;
             let nav_connections = nav;
+            let nav_settings = nav;
             let setup = if missing.is_empty() {
                 ().into_any()
             } else {
@@ -212,6 +227,25 @@ pub fn HomePage() -> impl IntoView {
             };
             view! {
                 <>
+                    {move || match hotkey_status.get() {
+                        Some(Ok(list)) if list.iter().any(|s| s.state != "active") => view! {
+                            <div class="card hotkey-warn">
+                                <strong>
+                                    {move || {
+                                        pick("Some hotkeys are not working yet", "有快捷键还没生效")
+                                    }}
+                                </strong>
+                                <button
+                                    class="link"
+                                    on:click=move |_| nav_settings.set(Page::Settings)
+                                >
+                                    {move || pick("Open Settings", "打开设置")}
+                                </button>
+                            </div>
+                        }
+                            .into_any(),
+                        _ => ().into_any(),
+                    }}
                     <h1 class="hero">
                         {move || pick("Hold ", "按住 ")}
                         {move || {
@@ -222,8 +256,8 @@ pub fn HomePage() -> impl IntoView {
                     </h1>
                     <p class="lede">
                         {move || pick(
-                            "orangebot type turns speech into clean text in whatever app you're using. Speech and text models run on your Mac or on servers you choose.",
-                            "orangebot type 把语音变成干净的文本，在你正用的任意应用里都能生效。语音模型和文字模型可以跑在你的 Mac 上，也可以跑在你选择的服务器上。",
+                            "Launch Type turns speech into clean text in whatever app you're using. Speech and text models run on your Mac or on servers you choose.",
+                            "Launch Type 把语音变成干净的文本，在你正用的任意应用里都能生效。语音模型和文字模型可以跑在你的 Mac 上，也可以跑在你选择的服务器上。",
                         )}
                     </p>
                     {setup}

@@ -29,7 +29,7 @@ pub async fn call<A: serde::Serialize, R: serde::de::DeserializeOwned>(
     args: &A,
 ) -> Result<R, String> {
     if !in_desktop() {
-        return Err("Open this window from the orangebot desktop app.".into());
+        return Err("Open this window from the Launch app.".into());
     }
     let args = serde_wasm_bindgen::to_value(args).map_err(|e| e.to_string())?;
     let v = tauri_invoke(cmd, args)

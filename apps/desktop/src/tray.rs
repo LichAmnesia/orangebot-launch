@@ -3,13 +3,13 @@ use tauri::menu::{Menu, MenuItem};
 use tauri::tray::TrayIconBuilder;
 
 pub fn setup(app: &tauri::App) -> tauri::Result<()> {
-    let open = MenuItem::with_id(app, "open", "Open orangebot", true, None::<&str>)?;
-    let quit = MenuItem::with_id(app, "quit", "Quit orangebot", true, None::<&str>)?;
+    let open = MenuItem::with_id(app, "open", "Open Launch", true, None::<&str>)?;
+    let quit = MenuItem::with_id(app, "quit", "Quit Launch", true, None::<&str>)?;
     let menu = Menu::with_items(app, &[&open, &quit])?;
 
     let mut builder = TrayIconBuilder::with_id("main")
         .icon_as_template(false)
-        .tooltip("orangebot")
+        .tooltip("Launch")
         .menu(&menu)
         .show_menu_on_left_click(true)
         .on_menu_event(|app, event| match event.id().as_ref() {

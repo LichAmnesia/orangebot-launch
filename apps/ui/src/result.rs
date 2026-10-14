@@ -3,7 +3,7 @@ use leptos::task::spawn_local;
 use wasm_bindgen::{JsCast, JsValue};
 
 use crate::i18n::pick;
-use crate::ipc::{call, listen};
+use crate::ipc::{NoArgs, call, listen};
 use ob_ipc::{ResultEvent, cmd, event};
 
 #[derive(serde::Serialize)]
@@ -102,6 +102,12 @@ pub fn ResultCard() -> impl IntoView {
 
     let dismiss = move |_| hide_window();
 
+    let request_accessibility = move |_| {
+        spawn_local(async move {
+            let _ = call::<_, bool>(cmd::REQUEST_ACCESSIBILITY, &NoArgs {}).await;
+        });
+    };
+
     view! {
         <div class="result">
             {move || match card.get() {
@@ -109,30 +115,51 @@ pub fn ResultCard() -> impl IntoView {
                     <p class="muted">{move || pick("Nothing to recover.", "没有需要恢复的内容。")}</p>
                 }
                     .into_any(),
-                Some(c) => view! {
-                    <p class="muted">{c.reason}</p>
-                    <textarea
-                        prop:value=move || text.get()
-                        on:input=move |ev| text.set(event_target_value(&ev))
-                    ></textarea>
-                    <details>
-                        <summary>{move || pick("What was heard", "听到了什么")}</summary>
-                        <p>{c.raw}</p>
-                    </details>
-                    <div class="row">
-                        <button class="btn primary" on:click=insert>
-                            {move || pick("Insert into current app", "插入到当前应用")}
-                        </button>
-                        <button class="btn" on:click=retry>
-                            {move || pick("Retry cleanup", "重试润色")}
-                        </button>
-                        <button class="btn" on:click=copy>{move || pick("Copy", "复制")}</button>
-                        <button class="btn" on:click=dismiss>
-                            {move || pick("Dismiss", "关闭")}
-                        </button>
-                    </div>
-                    <p class="muted">{move || status.get()}</p>
-                }                .into_any(),
+                Some(c) => {
+                    let need_accessibility = c.reason.to_lowercase().contains("accessibility");
+                    view! {
+                        <p class="muted">{c.reason}</p>
+                        {need_accessibility.then(|| {
+                            view! {
+                                <div class="perm-box">
+                                    <p>
+                                        {move || {
+                                            pick(
+                                                "Launch needs Accessibility permission to type into other apps. Click Allow, switch it on for Launch, then press Insert again.",
+                                                "Launch 需要「辅助功能」权限才能往其他应用里输入文字。点「允许」，在列表里打开 Launch，然后再点「插入」。",
+                                            )
+                                        }}
+                                    </p>
+                                    <button class="btn primary" on:click=request_accessibility>
+                                        {move || pick("Allow Accessibility", "允许辅助功能")}
+                                    </button>
+                                </div>
+                            }
+                        })}
+                        <textarea
+                            prop:value=move || text.get()
+                            on:input=move |ev| text.set(event_target_value(&ev))
+                        ></textarea>
+                        <details>
+                            <summary>{move || pick("What was heard", "原始识别")}</summary>
+                            <p>{c.raw}</p>
+                        </details>
+                        <div class="row">
+                            <button class="btn primary" on:click=insert>
+                                {move || pick("Insert into current app", "插入到当前应用")}
+                            </button>
+                            <button class="btn" on:click=retry>
+                                {move || pick("Retry cleanup", "重新整理")}
+                            </button>
+                            <button class="btn" on:click=copy>{move || pick("Copy", "复制")}</button>
+                            <button class="btn" on:click=dismiss>
+                                {move || pick("Dismiss", "关闭")}
+                            </button>
+                        </div>
+                        <p class="muted">{move || status.get()}</p>
+                    }
+                        .into_any()
+                }
             }}
         </div>
     }

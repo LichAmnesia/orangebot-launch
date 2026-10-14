@@ -102,8 +102,8 @@ pub fn PersonalizationPage() -> impl IntoView {
         <h1>{move || pick("Personalization", "个性化")}</h1>
         <p class="lede">
             {move || pick(
-                "orangebot can follow how you write — tone, punctuation, capitalisation. Learned notes stay on this Mac and you can edit or delete them any time.",
-                "orangebot 会逐渐了解你的写作风格——语气、标点、大小写。学到的笔记只存在这台 Mac 上，随时可以编辑或删除。",
+                "Launch can follow how you write — tone, punctuation, capitalisation. Learned notes stay on this Mac and you can edit or delete them any time.",
+                "Launch 会逐渐了解你的写作风格——语气、标点、大小写。学到的笔记只存在这台 Mac 上，随时可以编辑或删除。",
             )}
         </p>
         <div class="person">

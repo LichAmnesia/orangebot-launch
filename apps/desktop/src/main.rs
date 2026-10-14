@@ -1,6 +1,8 @@
 mod actions;
 mod ask;
 mod commands;
+#[cfg(test)]
+mod conf_guard;
 mod diag;
 mod dictionary;
 mod downloads;
@@ -51,6 +53,7 @@ fn main() {
                     Some(format!("hotkeys: {e}")),
                 );
             }
+            voice::start_permission_watch(app.handle().clone());
             if let Some(recipe) = settings::load().managed_recipe {
                 let handle = app.handle().clone();
                 tauri::async_runtime::spawn(async move {
@@ -86,12 +89,14 @@ fn main() {
             onboarding::system_info,
             onboarding::permission_status,
             onboarding::open_privacy_settings,
+            onboarding::request_accessibility,
             dictionary::list_dictionary,
             dictionary::add_dictionary_entry,
             dictionary::set_dictionary_enabled,
             dictionary::delete_dictionary_entry,
             hotkeys::get_hotkeys,
             hotkeys::set_hotkeys,
+            hotkeys::hotkey_status,
             retention::delete_all_history,
             modes::get_modes,
             modes::save_mode_prompt,
@@ -126,5 +131,5 @@ fn main() {
             language::set_ui_language
         ])
         .run(tauri::generate_context!())
-        .expect("error while running orangebot");
+        .expect("error while running Launch");
 }

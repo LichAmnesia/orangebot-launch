@@ -1,12 +1,12 @@
-# orangebot type
+# Orangebot Launch
 
-Open-source voice keyboard for the desktop, built on **orangebot** — an open local-model launcher.
+Launch is a desktop launcher for AI tasks: press a key in any app, the task runs on a local or cloud provider, the result lands back where you were. First tools: Launch Type (voice typing) and Launch Meeting (live transcription).
 
-Hold a key, speak, and clean text lands in whatever box you were typing in. Runs local speech and text models with one-click install, or connects to your own OpenAI-compatible servers (base URL, model and key set separately for speech and text).
+Launch by orangebot — an open-source local-model launcher. Hold a key, speak, and clean text lands in whatever box you were typing in. Runs local speech and text models with one-click install, or connects to your own OpenAI-compatible servers (base URL, model and key set separately for speech and text).
 
 - Rust core and Rust UI (Tauri 2 + Leptos); macOS first, Windows next
 - Platform layer: verified downloads (SHA-256, resumable), managed local services on loopback ports, endpoint tests
-- Tools are plugins on the platform (`ob-tools`): **type** first; read (TTS), scan (OCR) and file Q&A later
+- Tools are plugins on the platform (`ob-tools`): **Launch Type** first; read (TTS), scan (OCR) and file Q&A later
 - No account, no quota; strict-local mode keeps audio and text on your Mac
 
 Status: pre-alpha. Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · product spec: [docs/spec/SPEC.md](docs/spec/SPEC.md).
@@ -20,7 +20,7 @@ Status: pre-alpha. Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) ·
 | `crates/ob-providers` | OpenAI-compatible chat / transcription / model-list client |
 | `crates/ob-runtime` | sidecar supervisor and port probing |
 | `crates/ob-tools` | tool manifests, capabilities, registry |
-| `crates/ob-type` | voice-typing tool: session state machine, prompts |
+| `crates/ob-type` | Launch Type (voice typing): session state machine, prompts |
 | `crates/ob-audio`, `ob-platform`, `ob-platform-macos` | microphone, text insertion |
 | `crates/ob-storage`, `ob-ipc` | SQLite history + dictionary, typed UI ↔ shell IPC |
 | `apps/ob-asr-server` | local whisper.cpp server (Metal) with an OpenAI-compatible `/v1/audio/transcriptions` |

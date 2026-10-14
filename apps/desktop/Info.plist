@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
   <key>NSMicrophoneUsageDescription</key>
-  <string>orangebot listens while you hold your hotkey and turns your speech into text. Audio stays on this Mac and is discarded after transcription.</string>
+  <string>Launch listens while you hold your hotkey and turns your speech into text. Audio stays on this Mac and is discarded after transcription.</string>
   <key>LSApplicationCategoryType</key>
   <string>public.app-category.productivity</string>
 </dict>

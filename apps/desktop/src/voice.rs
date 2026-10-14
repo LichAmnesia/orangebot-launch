@@ -11,6 +11,8 @@ use tauri_plugin_global_shortcut::{GlobalShortcutExt, Shortcut, ShortcutState};
 use ob_platform_macos::keytap::{self, KeyEvent, SoloKey};
 
 const CANCEL_KEY: &str = "Escape";
+const EDGE_DEBOUNCE: Duration = Duration::from_millis(350);
+static LAST_EDGE: Mutex<Option<Instant>> = Mutex::new(None);
 
 #[cfg(target_os = "macos")]
 static SOLO: LazyLock<Mutex<Vec<(SoloKey, VoiceMode)>>> = LazyLock::new(|| Mutex::new(Vec::new()));
@@ -18,6 +20,7 @@ static SOLO: LazyLock<Mutex<Vec<(SoloKey, VoiceMode)>>> = LazyLock::new(|| Mutex
 static TAP_STARTED: OnceLock<()> = OnceLock::new();
 #[cfg(target_os = "macos")]
 static PERMISSION_REQUESTED: AtomicBool = AtomicBool::new(false);
+static STATUS: Mutex<Vec<ob_ipc::HotkeyStatus>> = Mutex::new(Vec::new());
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum VoiceMode {
@@ -62,7 +65,24 @@ pub fn capture_selection() -> Option<CapturedSelection> {
     None
 }
 
+fn should_ignore(last: Option<Instant>, now: Instant) -> bool {
+    last.is_some_and(|last| {
+        now.checked_duration_since(last)
+            .is_none_or(|elapsed| elapsed < EDGE_DEBOUNCE)
+    })
+}
+
+fn mark_edge() {
+    if let Ok(mut guard) = LAST_EDGE.lock() {
+        *guard = Some(Instant::now());
+    }
+}
+
 pub fn on_press(app: &tauri::AppHandle, mode: VoiceMode, solo: bool) {
+    let last_edge = LAST_EDGE.lock().ok().and_then(|guard| *guard);
+    if should_ignore(last_edge, Instant::now()) {
+        return;
+    }
     let state = app.state::<VoiceState>();
     let toggle = settings_activation() == "toggle";
     let Ok(mut guard) = state.active.lock() else {
@@ -71,6 +91,7 @@ pub fn on_press(app: &tauri::AppHandle, mode: VoiceMode, solo: bool) {
     if guard.is_some() {
         drop(guard);
         if toggle {
+            mark_edge();
             stop_recording(app);
         }
         return;
@@ -100,6 +121,7 @@ pub fn on_press(app: &tauri::AppHandle, mode: VoiceMode, solo: bool) {
 
     if mode == VoiceMode::Rewrite && selection.is_none() {
         drop(guard);
+        state.generation.fetch_add(1, Ordering::SeqCst);
         show_voicebar(app);
         crate::pipeline::emit(
             app,
@@ -119,6 +141,7 @@ pub fn on_press(app: &tauri::AppHandle, mode: VoiceMode, solo: bool) {
         return;
     }
 
+    state.generation.fetch_add(1, Ordering::SeqCst);
     if !solo {
         show_voicebar(app);
         crate::pipeline::emit(app, "recording", 0.0, None, None);
@@ -128,6 +151,7 @@ pub fn on_press(app: &tauri::AppHandle, mode: VoiceMode, solo: bool) {
         crate::recording::start_recording(crate::settings::load().input_device, move |level| {
             crate::pipeline::emit(&app_for_level, "recording", level, None, None);
         });
+    mark_edge();
     *guard = Some(Active {
         handle,
         target,
@@ -144,6 +168,14 @@ pub fn on_press(app: &tauri::AppHandle, mode: VoiceMode, solo: bool) {
 pub fn on_release(app: &tauri::AppHandle) {
     if settings_activation() == "toggle" {
         return;
+    }
+    let active = app
+        .state::<VoiceState>()
+        .active
+        .lock()
+        .is_ok_and(|guard| guard.is_some());
+    if active {
+        mark_edge();
     }
     stop_recording(app);
 }
@@ -256,12 +288,16 @@ pub fn register_all(app: &tauri::AppHandle) -> Result<(), String> {
         (settings.rewrite_hotkey, VoiceMode::Rewrite),
     ];
     let mut errors = Vec::new();
+    let mut statuses = Vec::new();
+    #[cfg(target_os = "macos")]
+    let mut solo_bindings: Vec<(VoiceMode, String)> = Vec::new();
     for (hotkey, mode) in bindings {
         #[cfg(target_os = "macos")]
         if let Some(key) = SoloKey::parse(&hotkey) {
             if let Ok(mut solo) = SOLO.lock() {
                 solo.push((key, mode));
             }
+            solo_bindings.push((mode, hotkey));
             continue;
         }
         match Shortcut::from_str(&hotkey) {
@@ -272,11 +308,18 @@ pub fn register_all(app: &tauri::AppHandle) -> Result<(), String> {
                             ShortcutState::Pressed => on_press(app, mode, false),
                             ShortcutState::Released => on_release(app),
                         });
-                if let Err(e) = result {
-                    errors.push(format!("{hotkey}: {e}"));
+                match result {
+                    Ok(()) => statuses.push(hotkey_status_entry(mode, hotkey, "active", "")),
+                    Err(e) => {
+                        errors.push(format!("{hotkey}: {e}"));
+                        statuses.push(hotkey_status_entry(mode, hotkey, "error", &e.to_string()));
+                    }
                 }
             }
-            Err(e) => errors.push(format!("{hotkey}: {e}")),
+            Err(e) => {
+                errors.push(format!("{hotkey}: {e}"));
+                statuses.push(hotkey_status_entry(mode, hotkey, "error", &e.to_string()));
+            }
         }
     }
     #[cfg(target_os = "macos")]
@@ -297,11 +340,83 @@ pub fn register_all(app: &tauri::AppHandle) -> Result<(), String> {
             }
         }
     }
+    #[cfg(target_os = "macos")]
+    {
+        let tap_running = TAP_STARTED.get().is_some();
+        for (mode, hotkey) in solo_bindings {
+            if tap_running {
+                statuses.push(hotkey_status_entry(mode, hotkey, "active", ""));
+            } else {
+                statuses.push(hotkey_status_entry(
+                    mode,
+                    hotkey,
+                    "needs_input_monitoring",
+                    "Allow Launch in System Settings \u{2192} Privacy & Security \u{2192} Input Monitoring",
+                ));
+            }
+        }
+    }
+    if let Ok(mut status) = STATUS.lock() {
+        *status = statuses;
+    }
     if errors.is_empty() {
         Ok(())
     } else {
         Err(errors.join("; "))
     }
+}
+
+fn mode_name(mode: VoiceMode) -> &'static str {
+    match mode {
+        VoiceMode::Dictate => "dictate",
+        VoiceMode::Translate => "translate",
+        VoiceMode::Ask => "ask",
+        VoiceMode::Rewrite => "rewrite",
+    }
+}
+
+fn hotkey_status_entry(
+    mode: VoiceMode,
+    hotkey: String,
+    state: &str,
+    detail: &str,
+) -> ob_ipc::HotkeyStatus {
+    ob_ipc::HotkeyStatus {
+        mode: mode_name(mode).to_string(),
+        hotkey,
+        state: state.to_string(),
+        detail: detail.to_string(),
+    }
+}
+
+pub fn status() -> Vec<ob_ipc::HotkeyStatus> {
+    STATUS
+        .lock()
+        .map(|status| status.clone())
+        .unwrap_or_default()
+}
+
+pub fn start_permission_watch(app: tauri::AppHandle) {
+    #[cfg(target_os = "macos")]
+    tauri::async_runtime::spawn(async move {
+        use tauri::Emitter;
+        loop {
+            tokio::time::sleep(Duration::from_secs(3)).await;
+            if TAP_STARTED.get().is_some() {
+                break;
+            }
+            let has_solo = SOLO.lock().is_ok_and(|solo| !solo.is_empty());
+            if !has_solo {
+                continue;
+            }
+            if keytap::input_monitoring_allowed() {
+                let _ = register_all(&app);
+                let _ = app.emit(ob_ipc::event::STATUS, ());
+            }
+        }
+    });
+    #[cfg(not(target_os = "macos"))]
+    let _ = app;
 }
 
 pub fn clear_solo() {
@@ -392,5 +507,38 @@ fn register_cancel(app: &tauri::AppHandle) {
 fn unregister_cancel(app: &tauri::AppHandle) {
     if let Ok(shortcut) = Shortcut::from_str(CANCEL_KEY) {
         let _ = app.global_shortcut().unregister(shortcut);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ignores_edge_within_window() {
+        let now = Instant::now();
+        let last = now - Duration::from_millis(100);
+        assert!(should_ignore(Some(last), now));
+    }
+
+    #[test]
+    fn allows_edge_at_or_after_window() {
+        let now = Instant::now();
+        let last = now - Duration::from_millis(350);
+        assert!(!should_ignore(Some(last), now));
+        let last = now - Duration::from_millis(400);
+        assert!(!should_ignore(Some(last), now));
+    }
+
+    #[test]
+    fn allows_first_edge() {
+        assert!(!should_ignore(None, Instant::now()));
+    }
+
+    #[test]
+    fn ignores_edge_when_clock_goes_backwards() {
+        let now = Instant::now();
+        let last = now + Duration::from_millis(10);
+        assert!(should_ignore(Some(last), now));
     }
 }

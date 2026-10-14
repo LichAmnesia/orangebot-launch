@@ -408,13 +408,13 @@ mod tests {
         server.mock(|when, then| {
             when.method(httpmock::Method::POST)
                 .path("/v1/audio/transcriptions")
-                .body_contains("orangebot");
+                .body_contains("Launch");
             then.status(200)
                 .json_body(serde_json::json!({"text": "ok"}));
         });
         let client = OpenAiClient::new(cfg(&server)).unwrap();
         let out = client
-            .transcribe_with_prompt(vec![1, 2, 3], Some("zh"), Some("orangebot"))
+            .transcribe_with_prompt(vec![1, 2, 3], Some("zh"), Some("Launch"))
             .await
             .unwrap();
         assert_eq!(out, "ok");

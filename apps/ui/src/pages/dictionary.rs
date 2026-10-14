@@ -141,7 +141,7 @@ pub fn DictionaryPage() -> impl IntoView {
         <div class="dict-add card">
             <input
                 class="input"
-                placeholder=move || pick("e.g. orangebot", "例如 orangebot")
+                placeholder=move || pick("e.g. Launch", "例如 Launch")
                 prop:value=phrase
                 on:input=move |ev| set_phrase.set(event_target_value(&ev))
                 on:keydown=move |ev| {

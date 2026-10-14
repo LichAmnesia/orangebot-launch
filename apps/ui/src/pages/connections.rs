@@ -100,7 +100,7 @@ fn SearchCard() -> impl IntoView {
         set_busy.set(true);
         set_message.set(None);
         let args = SearchTestArgs {
-            query: "orangebot".to_string(),
+            query: "Launch".to_string(),
         };
         spawn_local(async move {
             let result = call::<_, Vec<Source>>(cmd::TEST_SEARCH, &args).await;

@@ -1,4 +1,4 @@
-//! orangebot meeting: live transcription of long recordings — text only, audio is never stored.
+//! Launch Meeting: live transcription of long recordings — text only, audio is never stored.
 
 pub mod chunker;
 pub mod transcript;
@@ -11,7 +11,7 @@ use ob_tools::{Capability, Tool, ToolManifest};
 /// Manifest of the meeting tool.
 pub static MEETING_MANIFEST: ToolManifest = ToolManifest {
     id: "meeting",
-    name: "orangebot meeting",
+    name: "Launch Meeting",
     version: env!("CARGO_PKG_VERSION"),
     requires: &[Capability::Asr],
 };
@@ -35,7 +35,7 @@ mod tests {
         let tool = MeetingTool;
         let manifest = tool.manifest();
         assert_eq!(manifest.id, "meeting");
-        assert_eq!(manifest.name, "orangebot meeting");
+        assert_eq!(manifest.name, "Launch Meeting");
         assert_eq!(manifest.requires, &[Capability::Asr]);
     }
 }

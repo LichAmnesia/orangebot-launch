@@ -1,4 +1,4 @@
-//! orangebot type: voice typing tool (dictate, translate, ask).
+//! Launch Type: voice typing tool (dictate, translate, ask).
 
 pub mod ask;
 pub mod prompts;

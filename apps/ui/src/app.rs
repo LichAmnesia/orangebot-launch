@@ -72,7 +72,8 @@ pub fn App() -> impl IntoView {
         <div class="shell">
             <nav class="sidebar">
                 <div class="brand" data-tauri-drag-region="">
-                    "orange"<span>"bot"</span>" type"
+                    <strong>"Launch"</strong>
+                    <small class="muted">"by orangebot"</small>
                 </div>
                 {Page::ALL_MAIN
                     .iter()

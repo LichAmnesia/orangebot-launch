@@ -190,11 +190,23 @@ mod imp {
             if !accessibility_trusted() {
                 return Err(PlatformError::PermissionMissing("accessibility".into()));
             }
+            match crate::selection::ax_insert(text) {
+                crate::selection::AxInsert::Verified => return Ok(Delivery::Verified),
+                // The AX set succeeded but could not be confirmed: the text
+                // may already be in the field, so pasting would double it.
+                crate::selection::AxInsert::Accepted => return Ok(Delivery::Attempted),
+                crate::selection::AxInsert::Unsupported => {}
+            }
             let snap = snapshot();
             let our_change_count = write_text(text);
-            sleep(Duration::from_millis(40));
+            sleep(Duration::from_millis(60));
             post_cmd_v()?;
-            sleep(Duration::from_millis(250));
+            // Chrome / Electron / slow apps read the pasteboard long after
+            // Cmd+V returns; restoring early hands them the old clipboard.
+            // Wait, polling so we do not restore ahead of the readers.
+            for _ in 0..8 {
+                sleep(Duration::from_millis(100));
+            }
             restore(snap, our_change_count);
             // Paste consumption cannot be verified on macOS without AX readback.
             Ok(Delivery::Attempted)
@@ -238,3 +250,6 @@ pub mod selection;
 
 #[cfg(target_os = "macos")]
 pub use imp::{MacPlatform, accessibility_trusted, copy_selection};
+
+#[cfg(target_os = "macos")]
+pub use selection::request_accessibility;

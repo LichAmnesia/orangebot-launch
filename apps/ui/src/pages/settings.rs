@@ -1,10 +1,12 @@
 use leptos::ev;
 use leptos::prelude::*;
 use leptos::task::spawn_local;
-use ob_ipc::{AppStatus, GeneralSettings, HotkeySettings, MicInfo, MicTest, UpdateInfo, cmd};
+use ob_ipc::{
+    AppStatus, GeneralSettings, HotkeySettings, HotkeyStatus, MicInfo, MicTest, UpdateInfo, cmd,
+};
 
 use crate::i18n::{Lang, LangCtx, browser_lang, pick};
-use crate::ipc::{NoArgs, call};
+use crate::ipc::{NoArgs, call, listen};
 use crate::keys::Keys;
 
 fn key_from_code(code: &str) -> String {
@@ -59,6 +61,19 @@ struct SetLangArgs {
     lang: String,
 }
 
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct PrivacyArgs {
+    kind: String,
+}
+
+fn open_privacy(kind: &str) {
+    let kind = kind.to_string();
+    spawn_local(async move {
+        let _ = call::<_, ()>(cmd::OPEN_PRIVACY_SETTINGS, &PrivacyArgs { kind }).await;
+    });
+}
+
 const ALL_LANGUAGES: [&str; 14] = [
     "English",
     "Simplified Chinese",
@@ -97,6 +112,45 @@ pub fn SettingsPage() -> impl IntoView {
         let _ = version.get();
         async move { call::<_, HotkeySettings>(cmd::GET_HOTKEYS, &NoArgs {}).await }
     });
+
+    let status_version = RwSignal::new(0u32);
+    let hotkey_status = AsyncDerived::new_unsync(move || {
+        let _ = status_version.get();
+        async move { call::<_, Vec<HotkeyStatus>>(cmd::HOTKEY_STATUS, &NoArgs {}).await }
+    });
+    spawn_local(listen::<()>(ob_ipc::event::STATUS, move |_| {
+        status_version.update(|v| *v += 1);
+    }));
+
+    let hotkey_status_row = move |mode: &'static str| {
+        let found = hotkey_status
+            .get()
+            .and_then(|r| r.ok())
+            .and_then(|list| list.into_iter().find(|s| s.mode == mode));
+        match found {
+            Some(s) if s.state == "active" => view! {
+                <span class="hk-active">{move || pick("✓ Active", "✓ 已生效")}</span>
+            }
+            .into_any(),
+            Some(s) if s.state == "needs_input_monitoring" => {
+                let detail = s.detail.clone();
+                view! {
+                    <span class="hk-warn">
+                        {detail}
+                        <button class="link" on:click=move |_| open_privacy("input_monitoring")>
+                            {move || pick("Open Input Monitoring", "打开输入监控")}
+                        </button>
+                    </span>
+                }
+                .into_any()
+            }
+            Some(s) if !s.detail.is_empty() => {
+                let detail = s.detail.clone();
+                view! { <span class="error">{detail}</span> }.into_any()
+            }
+            _ => ().into_any(),
+        }
+    };
 
     let dictate = RwSignal::new(String::new());
     let translate = RwSignal::new(String::new());
@@ -275,74 +329,81 @@ pub fn SettingsPage() -> impl IntoView {
         }
     });
 
-    let hotkey_row =
-        move |label: &'static str, en: &'static str, zh: &'static str, combo: RwSignal<String>| {
-            view! {
-                <div class="set-row">
-                    <span class="set-k">{move || pick(en, zh)}</span>
-                    <span class="set-v">
-                        {move || {
-                            if recording.get() == Some(label) {
-                                view! {
-                                    <span class="rec">
-                                        {move || pick("Press the new keys…", "按下新的快捷键…")}
-                                    </span>
-                                    <button
-                                        class="link"
-                                        on:click=move |_| {
-                                            record_err.set(None);
+    let hotkey_row = move |label: &'static str,
+                           mode: &'static str,
+                           en: &'static str,
+                           zh: &'static str,
+                           combo: RwSignal<String>| {
+        view! {
+            <div class="set-row">
+                <span class="set-k">{move || pick(en, zh)}</span>
+                <span class="set-v">
+                    {move || {
+                        if recording.get() == Some(label) {
+                            view! {
+                                <span class="rec">
+                                    {move || pick("Press the new keys…", "按下新的快捷键…")}
+                                </span>
+                                <button
+                                    class="link"
+                                    on:click=move |_| {
+                                        record_err.set(None);
+                                        stop_recording(true);
+                                    }
+                                >
+                                    {move || pick("Cancel", "取消")}
+                                </button>
+                            }
+                                .into_any()
+                        } else {
+                            view! {
+                                <Keys combo=combo.get()/>
+                                <button class="btn" on:click=move |_| start_recording(label)>
+                                    {move || pick("Change", "更改")}
+                                </button>
+                            }
+                                .into_any()
+                        }
+                    }}
+                </span>
+            </div>
+            <div class="set-row">
+                <span class="set-k"></span>
+                <span class="set-v">
+                    {PRESETS
+                        .iter()
+                        .map(|(name, value)| {
+                            let name = name.to_string();
+                            let value = value.to_string();
+                            view! {
+                                <button
+                                    class="link"
+                                    on:click=move |_| {
+                                        combo.set(value.clone());
+                                        record_err.set(None);
+                                        saved.set(false);
+                                        if recording.get_untracked() == Some(label) {
                                             stop_recording(true);
                                         }
-                                    >
-                                        {move || pick("Cancel", "取消")}
-                                    </button>
-                                }
-                                    .into_any()
-                            } else {
-                                view! {
-                                    <Keys combo=combo.get()/>
-                                    <button class="btn" on:click=move |_| start_recording(label)>
-                                        {move || pick("Change", "更改")}
-                                    </button>
-                                }
-                                    .into_any()
+                                    }
+                                >
+                                    {name}
+                                </button>
                             }
-                        }}
-                    </span>
-                </div>
-                <div class="set-row">
-                    <span class="set-k"></span>
-                    <span class="set-v">
-                        {PRESETS
-                            .iter()
-                            .map(|(name, value)| {
-                                let name = name.to_string();
-                                let value = value.to_string();
-                                view! {
-                                    <button
-                                        class="link"
-                                        on:click=move |_| {
-                                            combo.set(value.clone());
-                                            record_err.set(None);
-                                            saved.set(false);
-                                            if recording.get_untracked() == Some(label) {
-                                                stop_recording(true);
-                                            }
-                                        }
-                                    >
-                                        {name}
-                                    </button>
-                                }
-                            })
-                            .collect_view()}
-                        {move || {
-                            (combo.get() == "Fn")
-                                .then(|| view! { <p class="muted">{fn_hint()}</p> })
-                        }}
-                    </span>
-                </div>
-            }
-        };
+                        })
+                        .collect_view()}
+                    {move || {
+                        (combo.get() == "Fn")
+                            .then(|| view! { <p class="muted">{fn_hint()}</p> })
+                    }}
+                </span>
+            </div>
+            <div class="set-row">
+                <span class="set-k"></span>
+                <span class="set-v">{move || hotkey_status_row(mode)}</span>
+            </div>
+        }
+    };
 
     let save = move |_| {
         recording.set(None);
@@ -368,6 +429,7 @@ pub fn SettingsPage() -> impl IntoView {
                     let _ = call::<_, ()>(cmd::RESUME_HOTKEYS, &NoArgs {}).await;
                 }
             }
+            status_version.update(|v| *v += 1);
         });
     };
 
@@ -530,10 +592,10 @@ pub fn SettingsPage() -> impl IntoView {
         <div class="settings">
             <section class="card set">
                 <h2>{move || pick("Hotkey", "快捷键")}</h2>
-                {hotkey_row("Dictate", "Dictate", "听写", dictate)}
-                {hotkey_row("Translate", "Translate", "翻译", translate)}
-                {hotkey_row("Ask", "Ask", "提问", ask)}
-                {hotkey_row("Rewrite", "Rewrite", "改写", rewrite)}
+                {hotkey_row("Dictate", "dictate", "Dictate", "听写", dictate)}
+                {hotkey_row("Translate", "translate", "Translate", "翻译", translate)}
+                {hotkey_row("Ask", "ask", "Ask", "提问", ask)}
+                {hotkey_row("Rewrite", "rewrite", "Rewrite", "改写", rewrite)}
                 {row(
                     "Cancel",
                     "取消",
@@ -785,7 +847,7 @@ pub fn SettingsPage() -> impl IntoView {
                 </div>
                 <div class="set-row">
                     <span class="set-k">
-                        {move || pick("Open orangebot at login", "登录时打开 orangebot")}
+                        {move || pick("Open Launch at login", "登录时打开 Launch")}
                     </span>
                     <span class="set-v">
                         <input

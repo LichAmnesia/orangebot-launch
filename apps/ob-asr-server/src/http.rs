@@ -283,7 +283,7 @@ mod tests {
         let part = reqwest::multipart::Part::bytes(wav).file_name("a.wav");
         let form = reqwest::multipart::Form::new()
             .part("file", part)
-            .text("prompt", "orangebot");
+            .text("prompt", "Launch");
         let resp = reqwest::Client::new()
             .post(format!("{base}/v1/audio/transcriptions"))
             .multipart(form)
@@ -292,6 +292,6 @@ mod tests {
             .unwrap();
         assert_eq!(resp.status(), 200);
         let body: serde_json::Value = resp.json().await.unwrap();
-        assert_eq!(body["text"], "1600 samples prompt=orangebot");
+        assert_eq!(body["text"], "1600 samples prompt=Launch");
     }
 }

@@ -107,6 +107,20 @@ pub fn open_privacy_settings(kind: String) -> Result<(), String> {
     }
 }
 
+#[tauri::command]
+pub fn request_accessibility() -> bool {
+    #[cfg(target_os = "macos")]
+    {
+        let trusted = ob_platform_macos::request_accessibility();
+        let _ = open_privacy_settings("accessibility".to_string());
+        trusted
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        true
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -60,6 +60,11 @@ pub fn set_hotkeys(app: tauri::AppHandle, hotkeys: ob_ipc::HotkeySettings) -> Re
 }
 
 #[tauri::command]
+pub fn hotkey_status() -> Vec<ob_ipc::HotkeyStatus> {
+    crate::voice::status()
+}
+
+#[tauri::command]
 pub fn suspend_hotkeys(app: tauri::AppHandle) -> Result<(), String> {
     let _ = app.global_shortcut().unregister_all();
     crate::voice::clear_solo();

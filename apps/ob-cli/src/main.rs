@@ -6,13 +6,14 @@ mod history;
 mod meeting;
 mod models;
 mod provider;
+mod selftest;
 
 use std::path::PathBuf;
 
 use clap::Parser;
 use ob_tools::ToolRegistry;
 
-use cli::{Cli, Command, ModelsCmd, ProviderCmd};
+use cli::{Cli, Command, ModelsCmd, ProviderCmd, SelftestCmd};
 
 /// Root directory for the app's local data.
 #[allow(dead_code)]
@@ -82,5 +83,8 @@ async fn main() -> anyhow::Result<()> {
             file,
             min_pass,
         } => eval::run(suite, llm_url, llm_model, file, min_pass).await,
+        Command::Selftest { cmd } => match cmd {
+            SelftestCmd::Insert { apps, runs } => selftest::insert(apps, runs),
+        },
     }
 }

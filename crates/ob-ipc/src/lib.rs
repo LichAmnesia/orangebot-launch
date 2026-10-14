@@ -179,6 +179,14 @@ pub struct DictEntryInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct HotkeyStatus {
+    pub mode: String,
+    pub hotkey: String,
+    pub state: String,
+    pub detail: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct HotkeySettings {
     pub dictate: String,
     pub translate: String,
@@ -336,6 +344,8 @@ pub mod cmd {
     pub const SET_DICTIONARY_ENABLED: &str = "set_dictionary_enabled";
     pub const DELETE_DICTIONARY_ENTRY: &str = "delete_dictionary_entry";
     pub const GET_HOTKEYS: &str = "get_hotkeys";
+    pub const HOTKEY_STATUS: &str = "hotkey_status";
+    pub const REQUEST_ACCESSIBILITY: &str = "request_accessibility";
     pub const SET_HOTKEYS: &str = "set_hotkeys";
     pub const DELETE_ALL_HISTORY: &str = "delete_all_history";
     pub const GET_MODES: &str = "get_modes";

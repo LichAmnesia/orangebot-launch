@@ -2,7 +2,7 @@ use ob_tools::{Capability, Tool, ToolManifest};
 
 pub static TYPE_MANIFEST: ToolManifest = ToolManifest {
     id: "type",
-    name: "orangebot type",
+    name: "Launch Type",
     version: env!("CARGO_PKG_VERSION"),
     requires: &[Capability::Asr, Capability::Text],
 };
